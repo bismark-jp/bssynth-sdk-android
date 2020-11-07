@@ -1,0 +1,3 @@
+include ':bssynth'
+include ':sample'
+rootProject.name='bssynth sample'
