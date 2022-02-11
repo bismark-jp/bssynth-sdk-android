@@ -13,28 +13,28 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button_file"
+            android:id="@+id/buttonFile"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="File" />
 
         <Button
-            android:id="@+id/button_start"
+            android:id="@+id/buttonStart"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Start" />
 
         <Button
-            android:id="@+id/button_stop"
+            android:id="@+id/buttonStop"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Stop" />
 
         <Button
-            android:id="@+id/button_bounce"
+            android:id="@+id/buttonBounce"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -59,28 +59,28 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/button_key_down"
+            android:id="@+id/buttonKeyDown"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="-" />
 
         <Button
-            android:id="@+id/button_key_up"
+            android:id="@+id/buttonKeyUp"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="+" />
 
         <Button
-            android:id="@+id/button_speed_down"
+            android:id="@+id/buttonSpeedDown"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="-" />
 
         <Button
-            android:id="@+id/button_speed_up"
+            android:id="@+id/buttonSpeedUp"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"

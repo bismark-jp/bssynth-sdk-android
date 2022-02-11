@@ -8,11 +8,13 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_part.*
 import jp.bismark.bssynth.BssynthPlayer
 import jp.bismark.bssynth.Instrument
+import jp.bismark.sample.databinding.ActivityPartBinding
 
 class PartActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityPartBinding
 
     var module = 0
     var part = 0
@@ -21,7 +23,9 @@ class PartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_part)
+
+        binding = ActivityPartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
@@ -30,24 +34,24 @@ class PartActivity : AppCompatActivity() {
 
         this.title = "%02d".format(part + 1)
 
-        muteSwitch.isChecked = (bssynth.getMute(module, part) == 1)
-        muteSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.muteSwitch.isChecked = (bssynth.getMute(module, part) == 1)
+        binding.muteSwitch.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> bssynth.setMute(module, part, 1)
                 else -> bssynth.setMute(module, part, 0)
             }
         }
 
-        soloSwitch.isChecked = (bssynth.getSolo(module, part) == 1)
-        soloSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.soloSwitch.isChecked = (bssynth.getSolo(module, part) == 1)
+        binding.soloSwitch.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> bssynth.setSolo(module, part, 1)
                 else -> bssynth.setSolo(module, part, 0)
             }
         }
 
-        volumeSeekBar.progress = bssynth.getControlChangeMessage(module, part, 7)
-        volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.volumeSeekBar.progress = bssynth.getControlChangeMessage(module, part, 7)
+        binding.volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -76,8 +80,8 @@ class PartActivity : AppCompatActivity() {
                 }
             }
         }
-        listView.adapter = InstrumentAdapter(this, instrumentList)
-        listView.setOnItemClickListener { _, _, position, _ ->
+        binding.listView.adapter = InstrumentAdapter(this, instrumentList)
+        binding.listView.setOnItemClickListener { _, _, position, _ ->
             val instrument = instrumentList[position]
             bssynth.insertChannelMessage(module, 0xB0 + part, 0x00, instrument.bankMsb)
             bssynth.insertChannelMessage(module, 0xB0 + part, 0x20, instrument.bankLsb)
@@ -89,8 +93,8 @@ class PartActivity : AppCompatActivity() {
         val program = bssynth.getProgramChangeMessage(module, part)
         instrumentList.forEachIndexed { index, it ->
             if (it.bankMsb == bankMsb && it.bankLsb == bankLsb && it.program == program) {
-                listView.setSelection(index)
-                listView.setItemChecked(index, true)
+                binding.listView.setSelection(index)
+                binding.listView.setItemChecked(index, true)
                 return@forEachIndexed
             }
         }

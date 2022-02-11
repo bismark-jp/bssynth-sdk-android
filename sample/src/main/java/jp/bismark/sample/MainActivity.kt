@@ -22,24 +22,26 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.nbsp.materialfilepicker.MaterialFilePicker
 import com.nbsp.materialfilepicker.ui.FilePickerActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.regex.Pattern
 import jp.bismark.bssynth.BssynthPlayer
+import jp.bismark.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     val bssynth = BssynthPlayer.shared()
-
+    private lateinit var binding: ActivityMainBinding
     var partItems: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
         // GUI
-        button_file.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonFile.setOnClickListener(View.OnClickListener { v ->
             if (0 < bssynth.isPlaying()) {
                 Toast.makeText(
                     v.context,
@@ -52,21 +54,21 @@ class MainActivity : AppCompatActivity() {
             checkPermissionsAndOpenFilePicker()
         })
 
-        button_start.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonStart.setOnClickListener(View.OnClickListener { v ->
             if (bssynth.start() != 0) {
                 Toast.makeText(v.context, "Start error", Toast.LENGTH_LONG).show()
             }
         })
 
-        button_stop.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonStop.setOnClickListener(View.OnClickListener { v ->
             if (bssynth.stop() != 0) {
                 Toast.makeText(v.context, "Stop error", Toast.LENGTH_LONG).show()
             }
         })
 
-        seekBar1.setMax(bssynth.getTotalClocks())
-        seekBar1.setProgress(0)
-        seekBar1.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekBar1.setMax(bssynth.getTotalClocks())
+        binding.seekBar1.setProgress(0)
+        binding.seekBar1.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        button_key_down.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonKeyDown.setOnClickListener(View.OnClickListener { v ->
             var value = bssynth.getKeyControl()
             if (-5 < value) {
                 value--
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        button_key_up.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonKeyUp.setOnClickListener(View.OnClickListener { v ->
             var value = bssynth.getKeyControl()
             if (value < 5) {
                 value++
@@ -95,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        button_speed_down.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonSpeedDown.setOnClickListener(View.OnClickListener { v ->
             var value = bssynth.getSpeedControl()
             if (-10 < value) {
                 value -= 2
@@ -104,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        button_speed_up.setOnClickListener(View.OnClickListener { v ->
+        binding.buttonSpeedUp.setOnClickListener(View.OnClickListener { v ->
             var value = bssynth.getSpeedControl()
             if (value < 10) {
                 value += 2
@@ -117,14 +119,14 @@ class MainActivity : AppCompatActivity() {
         val mainHandler = Handler(Looper.getMainLooper())
         Handler(Looper.getMainLooper()).post(object : Runnable {
             override fun run() {
-                if (!seekBar1.isPressed()) seekBar1.setProgress(bssynth.getCurrentClocks())
+                if (!binding.seekBar1.isPressed()) binding.seekBar1.setProgress(bssynth.getCurrentClocks())
                 mainHandler.postDelayed(this, 1000)
             }
         })
 
         for (part in 1..16) partItems.add("%02d".format(part))
-        listView.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, partItems)
-        listView.setOnItemClickListener { _, _, position, _ ->
+        binding.listView.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, partItems)
+        binding.listView.setOnItemClickListener { _, _, position, _ ->
             val intent = Intent(this, PartActivity::class.java).apply {
                 putExtra("module", position / 16)
                 putExtra("part", position % 16)
@@ -167,8 +169,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Set MIDI file to " + path, Toast.LENGTH_LONG).show()
 
                     // Reset seek bar for the new midi file
-                    seekBar1.setMax(bssynth.getTotalClocks())
-                    seekBar1.setProgress(0)
+                    binding.seekBar1.setMax(bssynth.getTotalClocks())
+                    binding.seekBar1.setProgress(0)
                 } else {
                     Toast.makeText(this, "Cannot Set MIDI file to " + path, Toast.LENGTH_LONG).show()
                 }
