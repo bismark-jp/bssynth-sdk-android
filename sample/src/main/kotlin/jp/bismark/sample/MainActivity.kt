@@ -4,11 +4,12 @@
 
 package jp.bismark.sample
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.READ_MEDIA_AUDIO
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     val bssynth = BssynthPlayer.shared()
     private lateinit var binding: ActivityMainBinding
-    var partItems: ArrayList<String> = ArrayList()
+    private var partItems: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +67,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        binding.seekBar1.setMax(bssynth.getTotalClocks())
-        binding.seekBar1.setProgress(0)
+        binding.seekBar1.max = bssynth.getTotalClocks()
+        binding.seekBar1.progress = 0
         binding.seekBar1.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
@@ -119,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         val mainHandler = Handler(Looper.getMainLooper())
         Handler(Looper.getMainLooper()).post(object : Runnable {
             override fun run() {
-                if (!binding.seekBar1.isPressed()) binding.seekBar1.setProgress(bssynth.getCurrentClocks())
+                if (!binding.seekBar1.isPressed) binding.seekBar1.progress = bssynth.getCurrentClocks()
                 mainHandler.postDelayed(this, 1000)
             }
         })
@@ -144,9 +145,10 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openFilePicker()
                 } else {
                     showError()
@@ -179,7 +181,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermissionsAndOpenFilePicker() {
-        val permission = READ_EXTERNAL_STORAGE
+        val permission = if (Build.VERSION.SDK_INT > 32) {
+            READ_MEDIA_AUDIO
+        } else {
+            READ_EXTERNAL_STORAGE
+        }
         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 showError()

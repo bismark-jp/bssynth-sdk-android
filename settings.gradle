@@ -1,3 +1,3 @@
 include ':bssynth'
 include ':sample'
-rootProject.name='bssynth sample'
+rootProject.name='bssynth-sdk-android'
