@@ -1,6 +1,6 @@
 /* bsmp.h - bssynth MIDI Player Library */
 
-/* Copyright (c) 2002 - 2019 bismark LLC. All rights reserved */
+/* Copyright (c) 2002 - 2023 bismark LLC. All rights reserved */
 
 /*
 modification history
@@ -134,8 +134,13 @@ typedef enum
 	BSMP_CTRL_GET_SOLO = 12400,
 
 	/* bsmp controls: 20000 - 29999 */
+
+	
+
+
 	BSMP_CTRL_GET_OPEN_SL_ENGINE = 28000, /* <android only> */
 	BSMP_CTRL_GET_OPEN_SL_ENGINE_INTERFACE, /* <android only> */
+
 
 	/* internal use only: 99900 - 99999 */
 	BSMP_CTRL_GET_BSSE_FUNC = 99900, /* <private only> */
@@ -177,6 +182,7 @@ enum
 	BSMP_FILE_FORMAT_SMF_1,
 	BSMP_FILE_FORMAT_SMF_2, /* <not supported> */
 
+
 	/* volume */
 	BSMP_VOLUME_MIN = 0,
 	BSMP_VOLUME_DEF = 10,
@@ -201,6 +207,11 @@ enum
 	BSMP_GUIDE_MIN = -2,
 	BSMP_GUIDE_DEF = 0,
 	BSMP_GUIDE_MAX = 2,
+
+
+	BSMP_KT_SPEED_MIN = -20,
+	BSMP_KT_SPEED_DEF = BSMP_SPEED_DEF,
+	BSMP_KT_SPEED_MAX = 20,
 };
 
 typedef enum {
@@ -212,6 +223,7 @@ typedef enum {
 typedef enum {
 	BSMP_SOUND_LIBRARY_SEL_MODE_NORAMAL = 0,
 } BSMP_SOUND_LIBRARY_SEL_MODE;
+
 
 /* typedefs */
 
@@ -239,6 +251,8 @@ typedef struct {
 	BSMP_SOUND_LIBRARY_SEL_MODE mode;
 } BSMP_SOUND_LIBRARY_SEL;
 
+
+
 typedef struct {
 	int size;
 
@@ -260,6 +274,7 @@ typedef struct {
 	/* play */
 	BSMP_ERR (*start) (BSMP_HANDLE handle);
 	BSMP_ERR (*stop) (BSMP_HANDLE handle);
+	BSMP_ERR (*stopWithOption) (BSMP_HANDLE handle, int option);
 	BSMP_ERR (*seek) (BSMP_HANDLE handle, unsigned long tick);
 	BSMP_ERR (*seekWithTime) (BSMP_HANDLE handle, float time);
 	int (*isPlaying) (BSMP_HANDLE handle);
